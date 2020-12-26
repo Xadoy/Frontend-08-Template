@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Tic Tac Toe!</title>
     <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       .cell {
         width: 100px;
         height: 100px;
@@ -24,7 +36,8 @@
     </style>
   </head>
   <body>
-    <div id="board"></div>
+    <div id="root"><div id="board"></div></div>
+
     <script>
       let pattern = [0, 0, 0, 0, 1, 0, 0, 0, 0];
 
@@ -53,7 +66,11 @@
 
       const checkWin = () => {
         if (check(pattern, color)) {
-          alert(`${color === 2 ? "❌" : "⭕️"} is winner!`);
+          // use setTimeout with 0ms to allow browser re-render before alert
+          setTimeout(
+            () => alert(`${color === 2 ? "❌" : "⭕️"} is winner!`),
+            0
+          );
         }
       };
       const toggleColor = () => {
