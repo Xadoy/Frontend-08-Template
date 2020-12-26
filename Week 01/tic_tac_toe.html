@@ -53,14 +53,17 @@
       };
       const move = (i, j) => {
         pattern[i][j] = color;
-        if (check()) {
+        if (check(pattern, color)) {
           alert(`${color === 2 ? "❌" : "⭕️"} is winner!`);
         }
         color = 3 - color;
         show();
+        if (willWin(pattern, color)) {
+          console.log(`${color === 2 ? "❌" : "⭕️"} is winner!`);
+        }
       };
 
-      const check = () => {
+      const check = (pattern, color) => {
         for (let i = 0; i < 3; i++) {
           let win = true;
           for (let j = 0; j < 3; j++) {
@@ -98,6 +101,21 @@
           if (win) return true;
         }
         return false;
+      };
+      const clone = (pattern) => {
+        return JSON.parse(JSON.stringify(pattern));
+      };
+      const willWin = (pattern, color) => {
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            if (pattern[i][j]) continue;
+            let tempPattern = clone(pattern);
+            tempPattern[i][j] = color;
+            if (check(tempPattern, color)) {
+              return true;
+            }
+          }
+        }
       };
       show();
     </script>
