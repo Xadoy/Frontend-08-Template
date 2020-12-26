@@ -53,8 +53,51 @@
       };
       const move = (i, j) => {
         pattern[i][j] = color;
+        if (check()) {
+          alert(`${color === 2 ? "❌" : "⭕️"} is winner!`);
+        }
         color = 3 - color;
         show();
+      };
+
+      const check = () => {
+        for (let i = 0; i < 3; i++) {
+          let win = true;
+          for (let j = 0; j < 3; j++) {
+            if (pattern[i][j] !== color) {
+              win = false;
+            }
+          }
+          if (win) return true;
+        }
+        for (let i = 0; i < 3; i++) {
+          let win = true;
+          for (let j = 0; j < 3; j++) {
+            if (pattern[j][i] !== color) {
+              win = false;
+            }
+          }
+          if (win) return true;
+        }
+        {
+          let win = true;
+          for (let j = 0; j < 3; j++) {
+            if (pattern[j][j] !== color) {
+              win = false;
+            }
+          }
+          if (win) return true;
+        }
+        {
+          let win = true;
+          for (let j = 0; j < 3; j++) {
+            if (pattern[j][2 - j] !== color) {
+              win = false;
+            }
+          }
+          if (win) return true;
+        }
+        return false;
       };
       show();
     </script>
