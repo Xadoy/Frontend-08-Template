@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <title>Map Editor</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        user-select: none;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .cell {
+        display: inline-block;
+        line-height: 7px;
+        width: 6px;
+        height: 6px;
+        background-color: gray;
+        border-bottom: solid 1px white;
+        border-right: solid 1px white;
+        vertical-align: top;
+      }
+      #container {
+        width: 701px;
+        font-size: 0;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="container"></div>
+      <button onclick="localStorage['map']=JSON.stringify(map)">save</button>
+    </div>
+
+    <script>
+      let map = localStorage["map"]
+        ? JSON.parse(localStorage["map"])
+        : Array(10000).fill(0);
+
+      const offset = (x, y) => x + y * 100;
+
+      const sleep = (t) => new Promise((resolve) => setTimeout(resolve, t));
+
+      let container = document.getElementById("container");
+      for (let y = 0; y < 100; y++) {
+        for (let x = 0; x < 100; x++) {
+          let cell = document.createElement("div");
+          cell.classList.add("cell");
+          if (map[offset(x, y)] === 1) cell.style.backgroundColor = "black";
+
+          cell.addEventListener("mousemove", () => {
+            if (mousedown) {
+              if (clear) {
+                cell.style.backgroundColor = "";
+                map[offset(x, y)] = 0;
+              } else {
+                cell.style.backgroundColor = "black";
+                map[offset(x, y)] = 1;
+              }
+            }
+          });
+          container.appendChild(cell);
+        }
+      }
+      let mousedown = false;
+      let clear = false;
+      document.addEventListener("mousedown", (e) => {
+        mousedown = true;
+        clear = e.which === 3;
+      });
+      document.addEventListener("mouseup", () => (mousedown = false));
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+      const findPath = async (map, start, end) => {
+        let queue = [start];
+
+        const insert = async (x, y) => {
+          if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
+          if (map[offset(x, y)]) return;
+
+          await sleep(30);
+          container.children[offset(x, y)].style.backgroundColor = "lightgreen";
+          map[offset(x, y)] = 2;
+          queue.push([x, y]);
+        };
+
+        while (queue.length) {
+          let [x, y] = queue.shift();
+
+          if (x === end[0] && y === end[1]) return true;
+
+          await insert(x - 1, y);
+          await insert(x, y - 1);
+          await insert(x + 1, y);
+          await insert(x, y + 1);
+        }
+      };
+    </script>
+  </body>
+</html>
