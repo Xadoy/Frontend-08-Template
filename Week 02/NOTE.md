@@ -9,3 +9,6 @@
   - push + pop -> stack (or shift + unshift, though bad perf due to JavaScript
     array implementation)
 - bfs 和 dfs 区别就在于数据结构，bfs->queue，dfs->stack
+- Heuristic
+  - A -> may not be shortest path
+  - AStart -> shortest path: heurisitc value is smaller than direct distance
