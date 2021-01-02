@@ -43,6 +43,37 @@
     </div>
 
     <script>
+      class Sorted {
+        constructor(data, compare) {
+          this.data = data.slice();
+          this.compare = compare || ((a, b) => a - b);
+        }
+        take() {
+          if (!this.data.length) return;
+          let min = this.data[0];
+          let minIndex = 0;
+
+          // loop from index 1 and find the min
+          for (let i = 1; i < this.data.length; i++) {
+            if (this.compare(this.data[i], min) < 0) {
+              min = this.data[i];
+              minIndex = i;
+            }
+          }
+
+          // swap and pop -> O(1) deletion
+          this.data[minIndex] = this.data[this.data.length - 1];
+          this.data.pop();
+          return min;
+        }
+        give(v) {
+          this.data.push(v);
+        }
+        getLength() {
+          return this.data.length;
+        }
+      }
+
       let map = localStorage["map"]
         ? JSON.parse(localStorage["map"])
         : Array(10000).fill(0);
@@ -82,20 +113,23 @@
       document.addEventListener("contextmenu", (e) => e.preventDefault());
       const findPath = async (map, start, end) => {
         let table = Object.create(map);
-        let queue = [start];
+        let queue = new Sorted([start], (a, b) => distance(a) - distance(b));
+        // debugger;
+        const distance = (point) =>
+          (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2;
 
         const insert = async (x, y, prev) => {
           if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
           if (table[offset(x, y)]) return;
 
-          await sleep(1);
+          await sleep(5);
           container.children[offset(x, y)].style.backgroundColor = "lightgreen";
           table[offset(x, y)] = prev;
-          queue.push([x, y]);
+          queue.give([x, y]);
         };
 
-        while (queue.length) {
-          let [x, y] = queue.shift();
+        while (queue.getLength()) {
+          let [x, y] = queue.take();
 
           if (x === end[0] && y === end[1]) {
             let path = [];

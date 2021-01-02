@@ -140,6 +140,11 @@
           await insert(x, y - 1, [x, y]);
           await insert(x + 1, y, [x, y]);
           await insert(x, y + 1, [x, y]);
+
+          await insert(x - 1, y - 1, [x, y]);
+          await insert(x + 1, y - 1, [x, y]);
+          await insert(x - 1, y + 1, [x, y]);
+          await insert(x + 1, y + 1, [x, y]);
         }
         return null;
       };
