@@ -112,15 +112,21 @@
       document.addEventListener("mouseup", () => (mousedown = false));
       document.addEventListener("contextmenu", (e) => e.preventDefault());
       const findPath = async (map, start, end) => {
+        container.children[offset(end[0], end[1])].style.backgroundColor =
+          "red";
         let table = Object.create(map);
         let queue = new Sorted([start], (a, b) => distance(a) - distance(b));
-        // debugger;
+
         const distance = (point) =>
           (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2;
 
         const insert = async (x, y, prev) => {
           if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
-          if (table[offset(x, y)]) return;
+          const dataFromTable = table[offset(x, y)];
+          if (dataFromTable && dataFromTable !== 0) {
+            if (dataFromTable.cost > prev.cost) table[offset(x, y)] = prev;
+            return;
+          }
 
           await sleep(5);
           container.children[offset(x, y)].style.backgroundColor = "lightgreen";
@@ -130,27 +136,34 @@
 
         while (queue.getLength()) {
           let [x, y] = queue.take();
-
+          await sleep(5);
+          container.children[offset(x, y)].style.backgroundColor = "yellow";
           if (x === end[0] && y === end[1]) {
             let path = [];
             while (x != start[0] || y != start[1]) {
               path.push(map[offset(x, y)]);
-              [x, y] = table[offset(x, y)];
+              [x, y] = table[offset(x, y)].point;
               await sleep(30);
               container.children[offset(x, y)].style.backgroundColor = "purple";
             }
             return path;
           }
 
-          await insert(x - 1, y, [x, y]);
-          await insert(x, y - 1, [x, y]);
-          await insert(x + 1, y, [x, y]);
-          await insert(x, y + 1, [x, y]);
+          const cost = table[offset(x, y)].cost;
+          const curr = {
+            point: [x, y],
+            cost: cost !== undefined ? cost + 1 : 0,
+          };
+          // debugger;
+          await insert(x - 1, y, curr); // left
+          await insert(x, y - 1, curr); // up
+          await insert(x + 1, y, curr); // right
+          await insert(x, y + 1, curr); // down
 
-          await insert(x - 1, y - 1, [x, y]);
-          await insert(x + 1, y - 1, [x, y]);
-          await insert(x - 1, y + 1, [x, y]);
-          await insert(x + 1, y + 1, [x, y]);
+          await insert(x - 1, y - 1, curr);
+          await insert(x + 1, y - 1, curr);
+          await insert(x - 1, y + 1, curr);
+          await insert(x + 1, y + 1, curr);
         }
         return null;
       };
