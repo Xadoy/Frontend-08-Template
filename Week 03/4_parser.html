@@ -54,7 +54,7 @@
       const source = [...tokenize(expression_str)].filter(
         ({ type }) => type !== "Whitespace" && type !== "LineTerminator"
       );
-      const MultiplicativeExporession = (source) => {
+      const AdditiveExpression = (source) => {
         // Non Terminal Symbol -> so recursion
         if (source[0].type === "Number") {
           let node = {
@@ -62,7 +62,7 @@
             children: [source[0]],
           };
           source[0] = node;
-          return MultiplicativeExporession(source);
+          return MultiplicativeExpression(source);
         }
         // Non Terminal Symbol -> so recursion
         if (
@@ -81,16 +81,52 @@
           node.children.push(source.shift());
           node.children.push(source.shift());
           source.unshift(node);
-          return MultiplicativeExporession(source);
+          return MultiplicativeExpression(source);
         }
 
         // base case: first term is M_Expression, without trailing "*" or "/"
         if (source[0].type === "MultiplicativeExpression") return source[0];
 
         // ideally not reachable, assertion or throw?
-        return MultiplicativeExporession(source);
+        return MultiplicativeExpression(source);
       };
-      console.log(MultiplicativeExporession(source));
+      const MultiplicativeExpression = (source) => {
+        // Non Terminal Symbol -> so recursion
+        if (source[0].type === "Number") {
+          let node = {
+            type: "MultiplicativeExpression",
+            children: [source[0]],
+          };
+          source[0] = node;
+          return MultiplicativeExpression(source);
+        }
+        // Non Terminal Symbol -> so recursion
+        if (
+          source[0].type === "MultiplicativeExpression" &&
+          source[1] &&
+          (source[1].type === "*") | (source[1].type === "/")
+        ) {
+          let node = {
+            type: "MultiplicativeExpression",
+            operator: source[1].type,
+            children: [],
+          };
+          // get those three elements and put into the children of new node.
+          // then put node as the first element.
+          node.children.push(source.shift());
+          node.children.push(source.shift());
+          node.children.push(source.shift());
+          source.unshift(node);
+          return MultiplicativeExpression(source);
+        }
+
+        // base case: first term is M_Expression, without trailing "*" or "/"
+        if (source[0].type === "MultiplicativeExpression") return source[0];
+
+        // ideally not reachable, assertion or throw?
+        return MultiplicativeExpression(source);
+      };
+      console.log(MultiplicativeExpression(source));
     </script>
   </body>
 </html>
