@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <title>AST</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        user-select: none;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)|(.)/g;
+      const dict = [
+        "Number",
+        "Whitespace",
+        "LineTerminator",
+        "*",
+        "/",
+        "+",
+        "-",
+        "Unsupported",
+      ];
+
+      const illegalIndex = dict.indexOf("Unsupported") + 1;
+      function* tokenize(source) {
+        let result = null;
+        let prev = { lastIndex: 0 };
+        for (let match of source.matchAll(regexp)) {
+          if (match[illegalIndex])
+            throw new Error("Unsupported symbol detected");
+          for (let i = 1; i <= dict.length; i++)
+            if (match[i]) yield { type: dict[i - 1], value: match[0] };
+        }
+        yield {
+          type: "EOF",
+        };
+      }
+      const expression_str = "10 * 25 / 2";
+      const source = [...tokenize(expression_str)].filter(
+        ({ type }) => type !== "Whitespace" && type !== "LineTerminator"
+      );
+      const MultiplicativeExporession = (source) => {
+        // Non Terminal Symbol -> so recursion
+        if (source[0].type === "Number") {
+          let node = {
+            type: "MultiplicativeExpression",
+            children: [source[0]],
+          };
+          source[0] = node;
+          return MultiplicativeExporession(source);
+        }
+        // Non Terminal Symbol -> so recursion
+        if (
+          source[0].type === "MultiplicativeExpression" &&
+          source[1] &&
+          (source[1].type === "*") | (source[1].type === "/")
+        ) {
+          let node = {
+            type: "MultiplicativeExpression",
+            operator: source[1].type,
+            children: [],
+          };
+          // get those three elements and put into the children of new node.
+          // then put node as the first element.
+          node.children.push(source.shift());
+          node.children.push(source.shift());
+          node.children.push(source.shift());
+          source.unshift(node);
+          return MultiplicativeExporession(source);
+        }
+
+        // base case: first term is M_Expression, without trailing "*" or "/"
+        if (source[0].type === "MultiplicativeExpression") return source[0];
+
+        // ideally not reachable, assertion or throw?
+        return MultiplicativeExporession(source);
+      };
+      console.log(MultiplicativeExporession(source));
+    </script>
+  </body>
+</html>
