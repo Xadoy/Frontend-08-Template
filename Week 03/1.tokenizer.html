@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <title>AST</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        user-select: none;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)|(.)/g;
+      const dict = [
+        "Number",
+        "Whitespace",
+        "LineTerminator",
+        "*",
+        "/",
+        "+",
+        "-",
+        "Unsupported",
+      ];
+
+      const illegalIndex = dict.indexOf("Unsupported") + 1;
+      const tokenize = (source) => {
+        let result = null;
+        let prev = { lastIndex: 0 };
+        return Array.from(source.matchAll(regexp), function (match, index) {
+          if (match[illegalIndex])
+            throw new Error("Unsupported symbol detected");
+          for (let i = 1; i <= dict.length; i++)
+            if (match[i]) return dict[i - 1];
+        });
+      };
+    </script>
+  </body>
+</html>
