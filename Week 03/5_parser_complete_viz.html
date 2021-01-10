@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <title>AST</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        user-select: none;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .tree ul {
+        position: relative;
+        padding: 1em 0;
+        white-space: nowrap;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .tree ul::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+      .tree li {
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+        list-style-type: none;
+        position: relative;
+        padding: 1em 0.5em 0 0.5em;
+      }
+      .tree li::before,
+      .tree li::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 50%;
+        border-top: 1px solid #ccc;
+        width: 50%;
+        height: 1em;
+      }
+      .tree li::after {
+        right: auto;
+        left: 50%;
+        border-left: 1px solid #ccc;
+      }
+      .tree li:only-child::after,
+      .tree li:only-child::before {
+        display: none;
+      }
+      .tree li:only-child {
+        padding-top: 0;
+      }
+      .tree li:first-child::before,
+      .tree li:last-child::after {
+        border: 0 none;
+      }
+      .tree li:last-child::before {
+        border-right: 1px solid #ccc;
+        border-radius: 0 5px 0 0;
+      }
+      .tree li:first-child::after {
+        border-radius: 5px 0 0 0;
+      }
+      .tree ul ul::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        border-left: 1px solid #ccc;
+        width: 0;
+        height: 1em;
+      }
+      .tree li a {
+        border: 1px solid #ccc;
+        padding: 0.5em 0.75em;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 5px;
+        color: #333;
+        position: relative;
+        top: 1px;
+      }
+      .tree li a:hover,
+      .tree li a:hover + ul li a {
+        background: #e9453f;
+        color: #fff;
+        border: 1px solid #e9453f;
+      }
+      .tree li a:hover + ul li::after,
+      .tree li a:hover + ul li::before,
+      .tree li a:hover + ul::before,
+      .tree li a:hover + ul ul::before {
+        border-color: #e9453f;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="tree" id="tree"></div>
+    </div>
+    <script>
+      const regexp = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\*)|(\/)|(\+)|(\-)|(.)/g;
+      const dict = [
+        "Number",
+        "Whitespace",
+        "LineTerminator",
+        "*",
+        "/",
+        "+",
+        "-",
+        "Unsupported",
+      ];
+
+      const illegalIndex = dict.indexOf("Unsupported") + 1;
+      function* tokenize(source) {
+        let result = null;
+        let prev = { lastIndex: 0 };
+        for (let match of source.matchAll(regexp)) {
+          if (match[illegalIndex])
+            throw new Error("Unsupported symbol detected");
+          for (let i = 1; i <= dict.length; i++)
+            if (match[i]) yield { type: dict[i - 1], value: match[0] };
+        }
+        yield {
+          type: "EOF",
+        };
+      }
+      const expression_str = "1 + 3 * 5 + 10";
+      const source = [...tokenize(expression_str)].filter(
+        ({ type }) => type !== "Whitespace" && type !== "LineTerminator"
+      );
+      const Expression = (source) => {
+        if (
+          source[0].type === "AdditiveExpression" &&
+          source[1] &&
+          source[1].type === "EOF"
+        ) {
+          let node = {
+            type: "Expression",
+            children: [source.shift(), source.shift()],
+          };
+          source.unshift(node);
+          return node;
+        }
+        AdditiveExpression(source);
+        return Expression(source);
+      };
+      const AdditiveExpression = (source) => {
+        // Non Terminal Symbol -> so recursion
+        if (source[0].type === "MultiplicativeExpression") {
+          let node = {
+            type: "AdditiveExpression",
+            children: [source[0]],
+          };
+          source[0] = node;
+          return AdditiveExpression(source);
+        }
+        // Non Terminal Symbol -> so recursion
+        if (
+          source[0].type === "AdditiveExpression" &&
+          source[1] &&
+          (source[1].type === "+") | (source[1].type === "_")
+        ) {
+          let node = {
+            type: "AdditiveExpression",
+            operator: source[1].type,
+            children: [],
+          };
+          // get those three elements and put into the children of new node.
+          // then put node as the first element.
+          node.children.push(source.shift());
+          node.children.push(source.shift());
+          // third term is non-terminal symol (<A_E><+ or -><M_E>)
+          MultiplicativeExpression(source);
+          node.children.push(source.shift());
+          source.unshift(node);
+          return AdditiveExpression(source);
+        }
+
+        // base case: first term is M_Expression, without trailing "*" or "/"
+        if (source[0].type === "AdditiveExpression") return source[0];
+
+        // Additive should contain all logics of Multiplicative.
+        // Therefore if not found, try MultiplicativeExpression()
+        // after that, retry Additive, normally will hit this branch at first
+        // call of AdditiveExpression if starting with number
+        MultiplicativeExpression(source);
+        return AdditiveExpression(source);
+      };
+      const MultiplicativeExpression = (source) => {
+        // Non Terminal Symbol -> so recursion
+        if (source[0].type === "Number") {
+          let node = {
+            type: "MultiplicativeExpression",
+            children: [source[0]],
+          };
+          source[0] = node;
+          return MultiplicativeExpression(source);
+        }
+        // Non Terminal Symbol -> so recursion
+        if (
+          source[0].type === "MultiplicativeExpression" &&
+          source[1] &&
+          (source[1].type === "*") | (source[1].type === "/")
+        ) {
+          let node = {
+            type: "MultiplicativeExpression",
+            operator: source[1].type,
+            children: [],
+          };
+          // get those three elements and put into the children of new node.
+          // then put node as the first element.
+          node.children.push(source.shift());
+          node.children.push(source.shift());
+          node.children.push(source.shift());
+          source.unshift(node);
+          return MultiplicativeExpression(source);
+        }
+
+        // base case: first term is M_Expression, without trailing "*" or "/"
+        if (source[0].type === "MultiplicativeExpression") return source[0];
+
+        // ideally not reachable, assertion or throw?
+        return MultiplicativeExpression(source);
+      };
+      const createDom = (node, domNode) => {
+        const { type, children, value } = node;
+        const aNode = document.createElement("a");
+        const text = value && type !== value ? `${type}: ${value}` : type;
+        aNode.innerText = text;
+        aNode.setAttribute("href", "#");
+        const liNode = document.createElement("li");
+        liNode.appendChild(aNode);
+        domNode.appendChild(liNode);
+
+        if (!children) return;
+        const ulNode = document.createElement("ul");
+        children.forEach((childNode) => createDom(childNode, ulNode));
+        liNode.appendChild(ulNode);
+      };
+      const tree = document.getElementById("tree");
+      const ulNode = document.createElement("ul");
+
+      createDom(Expression(source), ulNode);
+      tree.appendChild(ulNode);
+    </script>
+  </body>
+</html>
