@@ -103,11 +103,64 @@
       .tree li a:hover + ul ul::before {
         border-color: #e9453f;
       }
+
+      form {
+        width: 40%;
+        height: 116px;
+      }
+      input[type="text"] {
+        -webkit-appearance: none;
+        appearance: none;
+
+        width: 100%;
+        border: 1px solid #333;
+        margin: 0;
+
+        font-family: inherit;
+        font-size: 90%;
+
+        box-sizing: border-box;
+      }
+
+      /* This is our style for the invalid fields */
+      input:invalid {
+        border-color: #900;
+        background-color: #fdd;
+      }
+
+      input:focus:invalid {
+        outline: none;
+      }
+
+      /* This is the style of our error messages */
+      .error {
+        width: 100%;
+        padding: 0;
+
+        font-size: 80%;
+        color: white;
+        background-color: #900;
+        border-radius: 0 0 5px 5px;
+
+        box-sizing: border-box;
+      }
+
+      .error.active {
+        padding: 0.3em;
+      }
     </style>
   </head>
   <body>
     <div id="root">
-      <input type="text" id="expression" />
+      <form novalidate>
+        <p>
+          <label for="expression">
+            <span>Please enter an expression:</span>
+            <input type="text" id="expression" name="expression" />
+            <span class="error" aria-live="polite"></span>
+          </label>
+        </p>
+      </form>
       <div class="tree" id="tree"></div>
     </div>
     <script>
@@ -129,7 +182,7 @@
         let prev = { lastIndex: 0 };
         for (let match of source.matchAll(regexp)) {
           if (match[illegalIndex])
-            throw new Error("Unsupported symbol detected");
+            throw new Error(`Unsupported symbol detected: "${match[0]}"`);
           for (let i = 1; i <= dict.length; i++)
             if (match[i]) yield { type: dict[i - 1], value: match[0] };
         }
@@ -156,7 +209,14 @@
           source.unshift(node);
           return node;
         } else if (source[0].type === "AdditiveExpression") {
-          throw new Error("Cannot parse expression");
+          if (source[1])
+            throw new Error(
+              "Cannot parse expression, please provide operators between numbers"
+            );
+          else
+            throw new Error(
+              'Cannot parse expression because of trailing "*" or "/"'
+            );
         }
         AdditiveExpression(source);
 
@@ -238,7 +298,9 @@
         if (source[0].type === "MultiplicativeExpression") return source[0];
 
         // ideally not reachable, assertion or throw?
-        throw new Error("Cannot parse");
+        throw new Error(
+          'Cannot parse expression because of trailing "+" or "-"'
+        );
         return MultiplicativeExpression(source);
       };
       const createDom = (node, domNode) => {
@@ -269,10 +331,22 @@
 
       // create input field
       const textInput = document.getElementById("expression");
+      const textInputError = document.querySelector("#expression + span.error");
       textInput.addEventListener("input", (e) => {
-        render(e.target.value);
+        try {
+          render(e.target.value);
+
+          // clear error, ref: https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation#validating_forms_using_javascript
+          textInputError.textContent = "";
+          textInputError.className = "error";
+          textInput.setCustomValidity("");
+        } catch (error) {
+          console.log(error.message);
+          textInput.setCustomValidity(error.message);
+          textInputError.textContent = error.message;
+        }
       });
-      textInput.value = "1 + 3 * 5 + 2 * ";
+      textInput.value = "1 + 3 * 5 + 2 * 10";
       textInput.dispatchEvent(new Event("input", { bubbles: true }));
     </script>
   </body>
