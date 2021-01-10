@@ -107,6 +107,7 @@
   </head>
   <body>
     <div id="root">
+      <input type="text" id="expression" />
       <div class="tree" id="tree"></div>
     </div>
     <script>
@@ -136,10 +137,12 @@
           type: "EOF",
         };
       }
-      const expression_str = "1 + 3 * 5 + 10";
-      const source = [...tokenize(expression_str)].filter(
-        ({ type }) => type !== "Whitespace" && type !== "LineTerminator"
-      );
+      const createSource = (expressionStr) => {
+        const tokensTrimmed = [...tokenize(expressionStr)].filter(
+          ({ type }) => type !== "Whitespace" && type !== "LineTerminator"
+        );
+        return tokensTrimmed;
+      };
       const Expression = (source) => {
         if (
           source[0].type === "AdditiveExpression" &&
@@ -152,8 +155,11 @@
           };
           source.unshift(node);
           return node;
+        } else if (source[0].type === "AdditiveExpression") {
+          throw new Error("Cannot parse expression");
         }
         AdditiveExpression(source);
+
         return Expression(source);
       };
       const AdditiveExpression = (source) => {
@@ -232,9 +238,11 @@
         if (source[0].type === "MultiplicativeExpression") return source[0];
 
         // ideally not reachable, assertion or throw?
+        throw new Error("Cannot parse");
         return MultiplicativeExpression(source);
       };
       const createDom = (node, domNode) => {
+        // css ref: https://codepen.io/philippkuehn/pen/QbrOaN
         const { type, children, value } = node;
         const aNode = document.createElement("a");
         const text = value && type !== value ? `${type}: ${value}` : type;
@@ -249,11 +257,23 @@
         children.forEach((childNode) => createDom(childNode, ulNode));
         liNode.appendChild(ulNode);
       };
-      const tree = document.getElementById("tree");
-      const ulNode = document.createElement("ul");
 
-      createDom(Expression(source), ulNode);
-      tree.appendChild(ulNode);
+      const render = (expressionStr) => {
+        const expressionAst = Expression(createSource(expressionStr));
+        const tree = document.getElementById("tree");
+        tree.innerHTML = "";
+        const ulNode = document.createElement("ul");
+        createDom(expressionAst, ulNode);
+        tree.appendChild(ulNode);
+      };
+
+      // create input field
+      const textInput = document.getElementById("expression");
+      textInput.addEventListener("input", (e) => {
+        render(e.target.value);
+      });
+      textInput.value = "1 + 3 * 5 + 2 * ";
+      textInput.dispatchEvent(new Event("input", { bubbles: true }));
     </script>
   </body>
 </html>
