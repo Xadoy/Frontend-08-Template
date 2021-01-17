@@ -64,11 +64,14 @@
         }
       };
 
-      console.log(kmp("Hello", "ll")); // true
-      console.log(kmp("abcdabcdabcex", "abcdabce"));
-      console.log(kmp("aabaabaaac", "aabaaac"));
-      console.log(kmp("abc", "abc"));
-      console.log(kmp("abxc", "abc")); // false
+      console.log('kmp("Hello", "ll")', kmp("Hello", "ll")); // true
+      console.log(
+        'kmp("abcdabcdabcex", "abcdabce")',
+        kmp("abcdabcdabcex", "abcdabce")
+      );
+      console.log('kmp("aabaabaaac", "aabaaac")', kmp("aabaabaaac", "aabaaac"));
+      console.log('kmp("abc", "abc")', kmp("abc", "abc"));
+      console.log('kmp("abxc", "abc")', kmp("abxc", "abc")); // false
     </script>
   </body>
 </html>
