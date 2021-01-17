@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <title>KMP</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        user-select: none;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const kmp = (source, pattern) => {
+        // generate table
+        let table = new Array(pattern.length).fill(0);
+        {
+          let i = 1,
+            j = 0;
+
+          while (i < pattern.length) {
+            if (pattern[i] === pattern[j]) {
+              ++j, ++i;
+              table[i] = j;
+            } else {
+              if (j > 0) j = table[j];
+              else {
+                ++i;
+              }
+            }
+          }
+        }
+
+        // matching
+        {
+          let i = 0,
+            j = 0;
+
+          while (i < source.length) {
+            if (pattern[j] === source[i]) {
+              ++j, ++i;
+            } else {
+              if (j > 0) j = table[j];
+              else {
+                ++i;
+              }
+            }
+            if (j === pattern.length) return true;
+          }
+          return false;
+        }
+      };
+
+      console.log(kmp("Hello", "ll")); // true
+      console.log(kmp("abcdabcdabcex", "abcdabce"));
+      console.log(kmp("aabaabaaac", "aabaaac"));
+      console.log(kmp("abc", "abc"));
+      console.log(kmp("abxc", "abc")); // false
+    </script>
+  </body>
+</html>
