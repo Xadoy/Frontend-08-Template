@@ -26,21 +26,24 @@
     <script>
       let callbacks = new Map();
 
+      let reactivities = new Map();
+
       let useReactivities = [];
       let object = {
         a: 1,
         b: 2,
+        c: {
+          d: 5,
+        },
       };
 
       let po = reactive(object);
 
-      let obj2 = { c: "hi" };
-      let po2 = reactive(obj2);
-
       effect(() => {
-        console.log("effect: ", po.a);
-        console.log("effect: ", po2.c);
+        console.log("effect: ", po.c.d);
+        document.getElementById("root").innerText = JSON.stringify(object);
       });
+
       function effect(callback) {
         useReactivities = [];
         callback();
@@ -56,7 +59,8 @@
         }
       }
       function reactive(object) {
-        return new Proxy(object, {
+        if (reactivities.has(object)) return reactivities.get(object);
+        let proxy = new Proxy(object, {
           set(obj, prop, val) {
             obj[prop] = val;
 
@@ -68,9 +72,12 @@
           },
           get(obj, prop) {
             useReactivities.push([obj, prop]);
+            if (typeof obj[prop] === "object") return reactive(obj[prop]);
             return obj[prop];
           },
         });
+        reactivities.set(object, proxy);
+        return proxy;
       }
     </script>
   </body>
