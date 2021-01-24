@@ -5,14 +5,14 @@
     <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
     <title>Dragable</title>
     <style type="text/css">
-      html,
+      /* html,
       body,
       #root {
         height: 100%;
         width: 100%;
         margin: 0;
         user-select: none;
-      }
+      } */
       /* #root {
         display: flex;
         align-items: center;
@@ -23,11 +23,32 @@
         width: 100px;
         height: 100px;
         background-color: pink;
+        display: inline-block;
       }
     </style>
   </head>
   <body>
     <!-- <div id="root"> -->
+    <div id="container">
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+      文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    </div>
     <div id="dragable"></div>
     <!-- </div> -->
     <script>
@@ -42,12 +63,43 @@
           document.removeEventListener("mouseup", up);
         };
         const move = (event) => {
-          dragable.style.transform = `translate(${
-            base.x + event.clientX - start.x
-          }px, ${base.y + event.clientY - start.y}px)`;
+          // dragable.style.transform = `translate(${
+          //   base.x + event.clientX - start.x
+          // }px, ${base.y + event.clientY - start.y}px)`;
+          let range = getNearest(event.clientX, event.clientY);
+          range.insertNode(dragable);
         };
         document.addEventListener("mousemove", move);
         document.addEventListener("mouseup", up);
+      });
+
+      let ranges = [];
+
+      const container = document.getElementById("container");
+      for (let i = 0; i < container.childNodes[0].textContent.length; i++) {
+        const range = document.createRange();
+        range.setStart(container.childNodes[0], i);
+        range.setEnd(container.childNodes[0], i);
+
+        console.log(range.getBoundingClientRect());
+        ranges.push(range);
+      }
+
+      function getNearest(x, y) {
+        let min = Infinity;
+        let nearest = null;
+        for (let range of ranges) {
+          let rect = range.getBoundingClientRect();
+          let dist = (rect.x - x) ** 2 + (rect.y - y) ** 2;
+          if (dist < min) {
+            nearest = range;
+            min = dist;
+          }
+        }
+        return nearest;
+      }
+      document.addEventListener("selectstart", function (event) {
+        event.preventDefault();
       });
     </script>
   </body>
