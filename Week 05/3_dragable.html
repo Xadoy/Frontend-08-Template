@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <title>Dragable</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        user-select: none;
+      }
+      /* #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      } */
+      #dragable {
+        width: 100px;
+        height: 100px;
+        background-color: pink;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div id="root"> -->
+    <div id="dragable"></div>
+    <!-- </div> -->
+    <script>
+      const dragable = document.getElementById("dragable");
+      const base = { x: 0, y: 0 };
+      dragable.addEventListener("mousedown", function (event) {
+        const start = { x: event.clientX, y: event.clientY };
+        const up = (event) => {
+          base.x += event.clientX - start.x;
+          base.y += event.clientY - start.y;
+          document.removeEventListener("mousemove", move);
+          document.removeEventListener("mouseup", up);
+        };
+        const move = (event) => {
+          dragable.style.transform = `translate(${
+            base.x + event.clientX - start.x
+          }px, ${base.y + event.clientY - start.y}px)`;
+        };
+        document.addEventListener("mousemove", move);
+        document.addEventListener("mouseup", up);
+      });
+    </script>
+  </body>
+</html>
