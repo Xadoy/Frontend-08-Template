@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g6/4.1.7/dist/g6.min.js"></script>
+    <title>Realm Viz</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      #container {
+        flex: 1 0 0;
+        width: 100%;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="container"></div>
+    </div>
+    <script>
+      const rawDataIntrinsics = [
+        {
+          "Intrinsic Name": "%AggregateError%",
+          "Global Name": "AggregateError",
+          "ECMAScript Language Association":
+            "The AggregateError constructor (20.5.7.1)",
+        },
+        {
+          "Intrinsic Name": "%Array%",
+          "Global Name": "Array",
+          "ECMAScript Language Association": "The Array constructor (23.1.1)",
+        },
+        {
+          "Intrinsic Name": "%ArrayBuffer%",
+          "Global Name": "ArrayBuffer",
+          "ECMAScript Language Association":
+            "The ArrayBuffer constructor (25.1.3)",
+        },
+        {
+          "Intrinsic Name": "%ArrayIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The prototype of Array iterator objects (23.1.5)",
+        },
+        {
+          "Intrinsic Name": "%AsyncFromSyncIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The prototype of async-from-sync iterator objects (27.1.4)",
+        },
+        {
+          "Intrinsic Name": "%AsyncFunction%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The constructor of async function objects (27.7.1)",
+        },
+        {
+          "Intrinsic Name": "%AsyncGeneratorFunction%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The constructor of async iterator objects (27.4.1)",
+        },
+        {
+          "Intrinsic Name": "%AsyncIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "An object that all standard built-in async iterator objects indirectly inherit from",
+        },
+        {
+          "Intrinsic Name": "%Atomics%",
+          "Global Name": "Atomics",
+          "ECMAScript Language Association": "The Atomics object (25.4)",
+        },
+        {
+          "Intrinsic Name": "%BigInt%",
+          "Global Name": "BigInt",
+          "ECMAScript Language Association": "The BigInt constructor (21.2.1)",
+        },
+        {
+          "Intrinsic Name": "%BigInt64Array%",
+          "Global Name": "BigInt64Array",
+          "ECMAScript Language Association":
+            "The BigInt64Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%BigUint64Array%",
+          "Global Name": "BigUint64Array",
+          "ECMAScript Language Association":
+            "The BigUint64Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%Boolean%",
+          "Global Name": "Boolean",
+          "ECMAScript Language Association": "The Boolean constructor (20.3.1)",
+        },
+        {
+          "Intrinsic Name": "%DataView%",
+          "Global Name": "DataView",
+          "ECMAScript Language Association":
+            "The DataView constructor (25.3.2)",
+        },
+        {
+          "Intrinsic Name": "%Date%",
+          "Global Name": "Date",
+          "ECMAScript Language Association": "The Date constructor (21.4.2)",
+        },
+        {
+          "Intrinsic Name": "%decodeURI%",
+          "Global Name": "decodeURI",
+          "ECMAScript Language Association":
+            "The decodeURI function (19.2.6.2)",
+        },
+        {
+          "Intrinsic Name": "%decodeURIComponent%",
+          "Global Name": "decodeURIComponent",
+          "ECMAScript Language Association":
+            "The decodeURIComponent function (19.2.6.3)",
+        },
+        {
+          "Intrinsic Name": "%encodeURI%",
+          "Global Name": "encodeURI",
+          "ECMAScript Language Association":
+            "The encodeURI function (19.2.6.4)",
+        },
+        {
+          "Intrinsic Name": "%encodeURIComponent%",
+          "Global Name": "encodeURIComponent",
+          "ECMAScript Language Association":
+            "The encodeURIComponent function (19.2.6.5)",
+        },
+        {
+          "Intrinsic Name": "%Error%",
+          "Global Name": "Error",
+          "ECMAScript Language Association": "The Error constructor (20.5.1)",
+        },
+        {
+          "Intrinsic Name": "%eval%",
+          "Global Name": "eval",
+          "ECMAScript Language Association": "The eval function (19.2.1)",
+        },
+        {
+          "Intrinsic Name": "%EvalError%",
+          "Global Name": "EvalError",
+          "ECMAScript Language Association":
+            "The EvalError constructor (20.5.5.1)",
+        },
+        {
+          "Intrinsic Name": "%FinalizationRegistry%",
+          "Global Name": "FinalizationRegistry",
+          "ECMAScript Language Association":
+            "The FinalizationRegistry constructor (26.2.1)",
+        },
+        {
+          "Intrinsic Name": "%Float32Array%",
+          "Global Name": "Float32Array",
+          "ECMAScript Language Association":
+            "The Float32Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%Float64Array%",
+          "Global Name": "Float64Array",
+          "ECMAScript Language Association":
+            "The Float64Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%ForInIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The prototype of For-In iterator objects (14.7.5.10)",
+        },
+        {
+          "Intrinsic Name": "%Function%",
+          "Global Name": "Function",
+          "ECMAScript Language Association":
+            "The Function constructor (20.2.1)",
+        },
+        {
+          "Intrinsic Name": "%GeneratorFunction%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The constructor of generator objects (27.3.1)",
+        },
+        {
+          "Intrinsic Name": "%Int8Array%",
+          "Global Name": "Int8Array",
+          "ECMAScript Language Association": "The Int8Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%Int16Array%",
+          "Global Name": "Int16Array",
+          "ECMAScript Language Association":
+            "The Int16Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%Int32Array%",
+          "Global Name": "Int32Array",
+          "ECMAScript Language Association":
+            "The Int32Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%isFinite%",
+          "Global Name": "isFinite",
+          "ECMAScript Language Association": "The isFinite function (19.2.2)",
+        },
+        {
+          "Intrinsic Name": "%isNaN%",
+          "Global Name": "isNaN",
+          "ECMAScript Language Association": "The isNaN function (19.2.3)",
+        },
+        {
+          "Intrinsic Name": "%IteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "An object that all standard built-in iterator objects indirectly inherit from",
+        },
+        {
+          "Intrinsic Name": "%JSON%",
+          "Global Name": "JSON",
+          "ECMAScript Language Association": "The JSON object (25.5)",
+        },
+        {
+          "Intrinsic Name": "%Map%",
+          "Global Name": "Map",
+          "ECMAScript Language Association": "The Map constructor (24.1.1)",
+        },
+        {
+          "Intrinsic Name": "%MapIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The prototype of Map iterator objects (24.1.5)",
+        },
+        {
+          "Intrinsic Name": "%Math%",
+          "Global Name": "Math",
+          "ECMAScript Language Association": "The Math object (21.3)",
+        },
+        {
+          "Intrinsic Name": "%Number%",
+          "Global Name": "Number",
+          "ECMAScript Language Association": "The Number constructor (21.1.1)",
+        },
+        {
+          "Intrinsic Name": "%Object%",
+          "Global Name": "Object",
+          "ECMAScript Language Association": "The Object constructor (20.1.1)",
+        },
+        {
+          "Intrinsic Name": "%parseFloat%",
+          "Global Name": "parseFloat",
+          "ECMAScript Language Association": "The parseFloat function (19.2.4)",
+        },
+        {
+          "Intrinsic Name": "%parseInt%",
+          "Global Name": "parseInt",
+          "ECMAScript Language Association": "The parseInt function (19.2.5)",
+        },
+        {
+          "Intrinsic Name": "%Promise%",
+          "Global Name": "Promise",
+          "ECMAScript Language Association": "The Promise constructor (27.2.3)",
+        },
+        {
+          "Intrinsic Name": "%Proxy%",
+          "Global Name": "Proxy",
+          "ECMAScript Language Association": "The Proxy constructor (28.2.1)",
+        },
+        {
+          "Intrinsic Name": "%RangeError%",
+          "Global Name": "RangeError",
+          "ECMAScript Language Association":
+            "The RangeError constructor (20.5.5.2)",
+        },
+        {
+          "Intrinsic Name": "%ReferenceError%",
+          "Global Name": "ReferenceError",
+          "ECMAScript Language Association":
+            "The ReferenceError constructor (20.5.5.3)",
+        },
+        {
+          "Intrinsic Name": "%Reflect%",
+          "Global Name": "Reflect",
+          "ECMAScript Language Association": "The Reflect object (28.1)",
+        },
+        {
+          "Intrinsic Name": "%RegExp%",
+          "Global Name": "RegExp",
+          "ECMAScript Language Association": "The RegExp constructor (22.2.3)",
+        },
+        {
+          "Intrinsic Name": "%RegExpStringIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The prototype of RegExp String Iterator objects (22.2.7)",
+        },
+        {
+          "Intrinsic Name": "%Set%",
+          "Global Name": "Set",
+          "ECMAScript Language Association": "The Set constructor (24.2.1)",
+        },
+        {
+          "Intrinsic Name": "%SetIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The prototype of Set iterator objects (24.2.5)",
+        },
+        {
+          "Intrinsic Name": "%SharedArrayBuffer%",
+          "Global Name": "SharedArrayBuffer",
+          "ECMAScript Language Association":
+            "The SharedArrayBuffer constructor (25.2.2)",
+        },
+        {
+          "Intrinsic Name": "%String%",
+          "Global Name": "String",
+          "ECMAScript Language Association": "The String constructor (22.1.1)",
+        },
+        {
+          "Intrinsic Name": "%StringIteratorPrototype%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The prototype of String iterator objects (22.1.5)",
+        },
+        {
+          "Intrinsic Name": "%Symbol%",
+          "Global Name": "Symbol",
+          "ECMAScript Language Association": "The Symbol constructor (20.4.1)",
+        },
+        {
+          "Intrinsic Name": "%SyntaxError%",
+          "Global Name": "SyntaxError",
+          "ECMAScript Language Association":
+            "The SyntaxError constructor (20.5.5.4)",
+        },
+        {
+          "Intrinsic Name": "%ThrowTypeError%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "A function object that unconditionally throws a new instance of %TypeError%",
+        },
+        {
+          "Intrinsic Name": "%TypedArray%",
+          "Global Name": "",
+          "ECMAScript Language Association":
+            "The super class of all typed Array constructors (23.2.1)",
+        },
+        {
+          "Intrinsic Name": "%TypeError%",
+          "Global Name": "TypeError",
+          "ECMAScript Language Association":
+            "The TypeError constructor (20.5.5.5)",
+        },
+        {
+          "Intrinsic Name": "%Uint8Array%",
+          "Global Name": "Uint8Array",
+          "ECMAScript Language Association":
+            "The Uint8Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%Uint8ClampedArray%",
+          "Global Name": "Uint8ClampedArray",
+          "ECMAScript Language Association":
+            "The Uint8ClampedArray constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%Uint16Array%",
+          "Global Name": "Uint16Array",
+          "ECMAScript Language Association":
+            "The Uint16Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%Uint32Array%",
+          "Global Name": "Uint32Array",
+          "ECMAScript Language Association":
+            "The Uint32Array constructor (23.2)",
+        },
+        {
+          "Intrinsic Name": "%URIError%",
+          "Global Name": "URIError",
+          "ECMAScript Language Association":
+            "The URIError constructor (20.5.5.6)",
+        },
+        {
+          "Intrinsic Name": "%WeakMap%",
+          "Global Name": "WeakMap",
+          "ECMAScript Language Association": "The WeakMap constructor (24.3.1)",
+        },
+        {
+          "Intrinsic Name": "%WeakRef%",
+          "Global Name": "WeakRef",
+          "ECMAScript Language Association": "The WeakRef constructor (26.1.1)",
+        },
+        {
+          "Intrinsic Name": "%WeakSet%",
+          "Global Name": "WeakSet",
+          "ECMAScript Language Association": "The WeakSet constructor (24.4.1)",
+        },
+      ];
+
+      const rawDataRealm = [
+        {
+          "Field Name": "[[Intrinsics]]",
+          Value:
+            "Record whose field names are intrinsic keys and whose values are objects",
+          Meaning:
+            "The intrinsic values used by code associated with this realm",
+        },
+        {
+          "Field Name": "[[GlobalObject]]",
+          Value: "Object",
+          Meaning: "The global object for this realm",
+        },
+        {
+          "Field Name": "[[GlobalEnv]]",
+          Value: "global Environment Record",
+          Meaning: "The global environment for this realm",
+        },
+        {
+          "Field Name": "[[TemplateMap]]",
+          Value:
+            "A List of Record { [[Site]]: Parse Node, [[Array]]: Object }.",
+          Meaning:
+            "Template objects are canonicalized separately for each realm using its Realm Record's [[TemplateMap]]. Each [[Site]] value is a Parse Node that is a TemplateLiteral. The associated [[Array]] value is the corresponding template object that is passed to a tag function.\n\nNote\nOnce a Parse Node becomes unreachable, the corresponding [[Array]] is also unreachable, and it would be unobservable if an implementation removed the pair from the [[TemplateMap]] list.",
+        },
+        {
+          "Field Name": "[[HostDefined]]",
+          Value: "Any, default value is undefined.",
+          Meaning:
+            "Field reserved for use by hosts that need to associate additional information with a Realm Record.",
+        },
+      ];
+      const rawDataGlobalObj = ["globalThis", "Infinity", "NaN", "undefined"];
+
+      // deprecated escape and unescape are omitted.
+
+      const dataIntrinsics = rawDataIntrinsics.map((intrinsic) => ({
+        id: !!intrinsic["Global Name"]
+          ? `${intrinsic["Intrinsic Name"]} Global Name: ${intrinsic["Global Name"]}`
+          : intrinsic["Intrinsic Name"],
+      }));
+
+      const dataGlobalObj = rawDataGlobalObj.map((globalObj) => ({
+        id: globalObj,
+      }));
+
+      const data = {
+        id: "Realm",
+        children: rawDataRealm.map((realmObjs) => ({
+          id: realmObjs["Field Name"],
+          children:
+            realmObjs["Field Name"] === "[[Intrinsics]]"
+              ? dataIntrinsics
+              : realmObjs["Field Name"] === "[[GlobalObject]]"
+              ? dataGlobalObj
+              : undefined,
+        })),
+      };
+      // const data = {
+      //   id: "Modeling Methods",
+      //   children: [
+      //     {
+      //       id: "Classification",
+      //       children: [
+      //         {
+      //           id: "Logistic regression",
+      //         },
+      //         {
+      //           id: "Linear discriminant analysis",
+      //         },
+      //         {
+      //           id: "Rules",
+      //         },
+      //         {
+      //           id: "Decision trees",
+      //         },
+      //         {
+      //           id: "Naive Bayes",
+      //         },
+      //         {
+      //           id: "K nearest neighbor",
+      //         },
+      //         {
+      //           id: "Probabilistic neural network",
+      //         },
+      //         {
+      //           id: "Support vector machine",
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       id: "Consensus",
+      //       children: [
+      //         {
+      //           id: "Models diversity",
+      //           children: [
+      //             {
+      //               id: "Different initializations",
+      //             },
+      //             {
+      //               id: "Different parameter choices",
+      //             },
+      //             {
+      //               id: "Different architectures",
+      //             },
+      //             {
+      //               id: "Different modeling methods",
+      //             },
+      //             {
+      //               id: "Different training sets",
+      //             },
+      //             {
+      //               id: "Different feature sets",
+      //             },
+      //           ],
+      //         },
+      //         {
+      //           id: "Methods",
+      //           children: [
+      //             {
+      //               id: "Classifier selection",
+      //             },
+      //             {
+      //               id: "Classifier fusion",
+      //             },
+      //           ],
+      //         },
+      //         {
+      //           id: "Common",
+      //           children: [
+      //             {
+      //               id: "Bagging",
+      //             },
+      //             {
+      //               id: "Boosting",
+      //             },
+      //             {
+      //               id: "AdaBoost",
+      //             },
+      //           ],
+      //         },
+      //       ],
+      //     },
+      //     {
+      //       id: "Regression",
+      //       children: [
+      //         {
+      //           id: "Multiple linear regression",
+      //         },
+      //         {
+      //           id: "Partial least squares",
+      //         },
+      //         {
+      //           id: "Multi-layer feedforward neural network",
+      //         },
+      //         {
+      //           id: "General regression neural network",
+      //         },
+      //         {
+      //           id: "Support vector regression",
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // };
+      const container = document.getElementById("container");
+      const width = container.scrollWidth || 1000;
+      const height = container.scrollHeight || 500;
+      const graph = new G6.TreeGraph({
+        container: "container",
+        width,
+        height,
+        modes: {
+          default: [
+            {
+              type: "collapse-expand",
+              onChange: function onChange(item, collapsed) {
+                const data = item.get("model");
+                data.collapsed = collapsed;
+                return true;
+              },
+            },
+            "drag-canvas",
+            "zoom-canvas",
+          ],
+        },
+        defaultNode: {
+          size: 26,
+          anchorPoints: [
+            [0, 0.5],
+            [1, 0.5],
+          ],
+        },
+        defaultEdge: {
+          type: "cubic-horizontal",
+        },
+        layout: {
+          type: "mindmap",
+          direction: "H",
+          getHeight: () => {
+            return 16;
+          },
+          getWidth: () => {
+            return 16;
+          },
+          getVGap: () => {
+            return 10;
+          },
+          getHGap: () => {
+            return 100;
+          },
+          getSide: () => {
+            return "right";
+          },
+        },
+      });
+
+      let centerX = 0;
+      graph.node(function (node) {
+        if (node.id === "Modeling Methods") {
+          centerX = node.x;
+        }
+
+        return {
+          label: node.id,
+          labelCfg: {
+            position:
+              node.children && node.children.length > 0
+                ? "right"
+                : node.x > centerX
+                ? "right"
+                : "left",
+            offset: 5,
+          },
+        };
+      });
+
+      graph.data(data);
+      graph.render();
+      graph.fitView();
+
+      if (typeof window !== "undefined")
+        window.onresize = () => {
+          if (!graph || graph.get("destroyed")) return;
+          if (!container || !container.scrollWidth || !container.scrollHeight)
+            return;
+          graph.changeSize(container.scrollWidth, container.scrollHeight);
+        };
+    </script>
+  </body>
+</html>

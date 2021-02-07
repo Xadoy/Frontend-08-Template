@@ -1,0 +1,162 @@
+<!-- original: https://tc39.es/ecma262/#sec-code-realms -->
+<emu-clause id="sec-code-realms">
+  <h1><span class="secnum">9.2</span> Realms</h1>
+  <p>
+    Before it is evaluated, all ECMAScript code must be associated with a
+    <dfn id="realm">realm</dfn>. Conceptually, a
+    <emu-xref href="#realm" id="_ref_3033"><a href="#realm">realm</a></emu-xref>
+    consists of a set of intrinsic objects, an ECMAScript global environment,
+    all of the ECMAScript code that is loaded within the scope of that global
+    environment, and other associated state and resources.
+  </p>
+  <p>
+    A
+    <emu-xref href="#realm" id="_ref_3034"><a href="#realm">realm</a></emu-xref>
+    is represented in this specification as a
+    <dfn id="realm-record">Realm Record</dfn> with the fields specified in
+    <emu-xref href="#table-realm-record-fields" id="_ref_241"
+      ><a href="#table-realm-record-fields">Table 23</a></emu-xref
+    >:
+  </p>
+  <emu-table
+    id="table-realm-record-fields"
+    caption="Realm Record Fields"
+    oldids="table-21"
+    ><figure>
+      <figcaption>
+        Table 23:
+        <emu-xref href="#realm-record" id="_ref_3035"
+          ><a href="#realm-record">Realm Record</a></emu-xref
+        >
+        Fields
+      </figcaption>
+      <span id="table-21"></span>
+      <table>
+        <tbody>
+          <tr>
+            <th>Field Name</th>
+            <th>Value</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>[[Intrinsics]]</td>
+            <td>
+              <emu-xref
+                href="#sec-list-and-record-specification-type"
+                id="_ref_3036"
+                ><a href="#sec-list-and-record-specification-type"
+                  >Record</a
+                ></emu-xref
+              >
+              whose field names are intrinsic keys and whose values are objects
+            </td>
+            <td>
+              The intrinsic values used by code associated with this
+              <emu-xref href="#realm" id="_ref_3037"
+                ><a href="#realm">realm</a></emu-xref
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>[[GlobalObject]]</td>
+            <td>Object</td>
+            <td>
+              The
+              <emu-xref href="#sec-global-object" id="_ref_3038"
+                ><a href="#sec-global-object">global object</a></emu-xref
+              >
+              for this
+              <emu-xref href="#realm" id="_ref_3039"
+                ><a href="#realm">realm</a></emu-xref
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>[[GlobalEnv]]</td>
+            <td>
+              <emu-xref href="#sec-global-environment-records" id="_ref_3040"
+                ><a href="#sec-global-environment-records"
+                  >global Environment Record</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              The global environment for this
+              <emu-xref href="#realm" id="_ref_3041"
+                ><a href="#realm">realm</a></emu-xref
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>[[TemplateMap]]</td>
+            <td>
+              A
+              <emu-xref
+                href="#sec-list-and-record-specification-type"
+                id="_ref_3042"
+                ><a href="#sec-list-and-record-specification-type"
+                  >List</a
+                ></emu-xref
+              >
+              of
+              <emu-xref
+                href="#sec-list-and-record-specification-type"
+                id="_ref_3043"
+                ><a href="#sec-list-and-record-specification-type"
+                  >Record</a
+                ></emu-xref
+              >
+              { [[Site]]:
+              <emu-xref href="#sec-syntactic-grammar" id="_ref_3044"
+                ><a href="#sec-syntactic-grammar">Parse Node</a></emu-xref
+              >, [[Array]]: Object }.
+            </td>
+            <td>
+              <p>
+                Template objects are canonicalized separately for each
+                <emu-xref href="#realm" id="_ref_3045"
+                  ><a href="#realm">realm</a></emu-xref
+                >
+                using its
+                <emu-xref href="#realm-record" id="_ref_3046"
+                  ><a href="#realm-record">Realm Record</a></emu-xref
+                >'s [[TemplateMap]]. Each [[Site]] value is a
+                <emu-xref href="#sec-syntactic-grammar" id="_ref_3047"
+                  ><a href="#sec-syntactic-grammar">Parse Node</a></emu-xref
+                >
+                that is a
+                <emu-nt id="_ref_13632"
+                  ><a href="#prod-TemplateLiteral">TemplateLiteral</a></emu-nt
+                >. The associated [[Array]] value is the corresponding template
+                object that is passed to a tag function.
+              </p>
+              <emu-note
+                ><span class="note">Note</span>
+                <div class="note-contents">
+                  Once a
+                  <emu-xref href="#sec-syntactic-grammar" id="_ref_3048"
+                    ><a href="#sec-syntactic-grammar">Parse Node</a></emu-xref
+                  >
+                  becomes unreachable, the corresponding [[Array]] is also
+                  unreachable, and it would be unobservable if an implementation
+                  removed the pair from the [[TemplateMap]] list.
+                </div></emu-note
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>[[HostDefined]]</td>
+            <td>Any, default value is <emu-val>undefined</emu-val>.</td>
+            <td>
+              Field reserved for use by hosts that need to associate additional
+              information with a
+              <emu-xref href="#realm-record" id="_ref_3049"
+                ><a href="#realm-record">Realm Record</a></emu-xref
+              >.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </figure></emu-table
+  >
+</emu-clause>

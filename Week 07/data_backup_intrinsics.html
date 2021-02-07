@@ -1,0 +1,1420 @@
+<!-- original: https://tc39.es/ecma262/#sec-well-known-intrinsic-objects -->
+<emu-clause id="sec-well-known-intrinsic-objects">
+  <h1><span class="secnum">6.1.7.4</span> Well-Known Intrinsic Objects</h1>
+  <p>
+    Well-known intrinsics are built-in objects that are explicitly referenced by
+    the algorithms of this specification and which usually have
+    <emu-xref href="#realm" id="_ref_1445"><a href="#realm">realm</a></emu-xref
+    >-specific identities. Unless otherwise specified each intrinsic object
+    actually corresponds to a set of similar objects, one per
+    <emu-xref href="#realm" id="_ref_1446"><a href="#realm">realm</a></emu-xref
+    >.
+  </p>
+  <p>
+    Within this specification a reference such as %name% means the intrinsic
+    object, associated with the current
+    <emu-xref href="#realm" id="_ref_1447"><a href="#realm">realm</a></emu-xref
+    >, corresponding to the name. A reference such as %name.a.b% means, as if
+    the "b" property of the "a" property of the intrinsic object %name% was
+    accessed prior to any ECMAScript code being evaluated. Determination of the
+    current
+    <emu-xref href="#realm" id="_ref_1448"><a href="#realm">realm</a></emu-xref>
+    and its intrinsics is described in
+    <emu-xref href="#sec-execution-contexts" id="_ref_107"
+      ><a href="#sec-execution-contexts">9.3</a></emu-xref
+    >. The well-known intrinsics are listed in
+    <emu-xref href="#table-well-known-intrinsic-objects" id="_ref_108"
+      ><a href="#table-well-known-intrinsic-objects">Table 8</a></emu-xref
+    >.
+  </p>
+  <emu-table
+    id="table-well-known-intrinsic-objects"
+    caption="Well-Known Intrinsic Objects"
+    oldids="table-7"
+    ><figure>
+      <figcaption>Table 8: Well-Known Intrinsic Objects</figcaption>
+      <span id="table-7"></span>
+      <table>
+        <tbody>
+          <tr>
+            <th>Intrinsic Name</th>
+            <th>Global Name</th>
+            <th>ECMAScript Language Association</th>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-aggregate-error-constructor" id="_ref_1449"
+                ><a href="#sec-aggregate-error-constructor"
+                  >%AggregateError%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>AggregateError</code>
+            </td>
+            <td>
+              The <code>AggregateError</code>
+              <emu-xref href="#constructor" id="_ref_1450"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-aggregate-error-constructor" id="_ref_109"
+                ><a href="#sec-aggregate-error-constructor"
+                  >20.5.7.1</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-array-constructor" id="_ref_1451"
+                ><a href="#sec-array-constructor">%Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Array</code>
+            </td>
+            <td>
+              The Array
+              <emu-xref href="#constructor" id="_ref_1452"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-array-constructor" id="_ref_110"
+                ><a href="#sec-array-constructor">23.1.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-arraybuffer-constructor" id="_ref_1453"
+                ><a href="#sec-arraybuffer-constructor"
+                  >%ArrayBuffer%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>ArrayBuffer</code>
+            </td>
+            <td>
+              The ArrayBuffer
+              <emu-xref href="#constructor" id="_ref_1454"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-arraybuffer-constructor" id="_ref_111"
+                ><a href="#sec-arraybuffer-constructor">25.1.3</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-%arrayiteratorprototype%-object"
+                id="_ref_1455"
+                ><a href="#sec-%arrayiteratorprototype%-object"
+                  >%ArrayIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The prototype of Array iterator objects (<emu-xref
+                href="#sec-array-iterator-objects"
+                id="_ref_112"
+                ><a href="#sec-array-iterator-objects">23.1.5</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-%asyncfromsynciteratorprototype%-object"
+                id="_ref_1456"
+                ><a href="#sec-%asyncfromsynciteratorprototype%-object"
+                  >%AsyncFromSyncIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The prototype of async-from-sync iterator objects (<emu-xref
+                href="#sec-async-from-sync-iterator-objects"
+                id="_ref_113"
+                ><a href="#sec-async-from-sync-iterator-objects"
+                  >27.1.4</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-async-function-constructor" id="_ref_1457"
+                ><a href="#sec-async-function-constructor"
+                  >%AsyncFunction%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The
+              <emu-xref href="#constructor" id="_ref_1458"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              of async function objects (<emu-xref
+                href="#sec-async-function-constructor"
+                id="_ref_114"
+                ><a href="#sec-async-function-constructor">27.7.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-asyncgeneratorfunction-constructor"
+                id="_ref_1459"
+                ><a href="#sec-asyncgeneratorfunction-constructor"
+                  >%AsyncGeneratorFunction%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The
+              <emu-xref href="#constructor" id="_ref_1460"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              of async iterator objects (<emu-xref
+                href="#sec-asyncgeneratorfunction-constructor"
+                id="_ref_115"
+                ><a href="#sec-asyncgeneratorfunction-constructor"
+                  >27.4.1</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-asynciteratorprototype" id="_ref_1461"
+                ><a href="#sec-asynciteratorprototype"
+                  >%AsyncIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              An object that all standard built-in async iterator objects
+              indirectly inherit from
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-atomics-object" id="_ref_1462"
+                ><a href="#sec-atomics-object">%Atomics%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Atomics</code>
+            </td>
+            <td>
+              The <code>Atomics</code> object (<emu-xref
+                href="#sec-atomics-object"
+                id="_ref_116"
+                ><a href="#sec-atomics-object">25.4</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-bigint-constructor" id="_ref_1463"
+                ><a href="#sec-bigint-constructor">%BigInt%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>BigInt</code>
+            </td>
+            <td>
+              The BigInt
+              <emu-xref href="#constructor" id="_ref_1464"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-bigint-constructor" id="_ref_117"
+                ><a href="#sec-bigint-constructor">21.2.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1465"
+                ><a href="#sec-typedarray-objects">%BigInt64Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>BigInt64Array</code>
+            </td>
+            <td>
+              The BigInt64Array
+              <emu-xref href="#constructor" id="_ref_1466"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_118"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1467"
+                ><a href="#sec-typedarray-objects"
+                  >%BigUint64Array%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>BigUint64Array</code>
+            </td>
+            <td>
+              The BigUint64Array
+              <emu-xref href="#constructor" id="_ref_1468"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_119"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-boolean-constructor" id="_ref_1469"
+                ><a href="#sec-boolean-constructor">%Boolean%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Boolean</code>
+            </td>
+            <td>
+              The Boolean
+              <emu-xref href="#constructor" id="_ref_1470"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-boolean-constructor" id="_ref_120"
+                ><a href="#sec-boolean-constructor">20.3.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-dataview-constructor" id="_ref_1471"
+                ><a href="#sec-dataview-constructor">%DataView%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>DataView</code>
+            </td>
+            <td>
+              The DataView
+              <emu-xref href="#constructor" id="_ref_1472"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-dataview-constructor" id="_ref_121"
+                ><a href="#sec-dataview-constructor">25.3.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-date-constructor" id="_ref_1473"
+                ><a href="#sec-date-constructor">%Date%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Date</code>
+            </td>
+            <td>
+              The Date
+              <emu-xref href="#constructor" id="_ref_1474"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-date-constructor" id="_ref_122"
+                ><a href="#sec-date-constructor">21.4.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-decodeuri-encodeduri" id="_ref_1475"
+                ><a href="#sec-decodeuri-encodeduri">%decodeURI%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>decodeURI</code>
+            </td>
+            <td>
+              The <code>decodeURI</code> function (<emu-xref
+                href="#sec-decodeuri-encodeduri"
+                id="_ref_123"
+                ><a href="#sec-decodeuri-encodeduri">19.2.6.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-decodeuricomponent-encodeduricomponent"
+                id="_ref_1476"
+                ><a href="#sec-decodeuricomponent-encodeduricomponent"
+                  >%decodeURIComponent%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>decodeURIComponent</code>
+            </td>
+            <td>
+              The <code>decodeURIComponent</code> function (<emu-xref
+                href="#sec-decodeuricomponent-encodeduricomponent"
+                id="_ref_124"
+                ><a href="#sec-decodeuricomponent-encodeduricomponent"
+                  >19.2.6.3</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-encodeuri-uri" id="_ref_1477"
+                ><a href="#sec-encodeuri-uri">%encodeURI%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>encodeURI</code>
+            </td>
+            <td>
+              The <code>encodeURI</code> function (<emu-xref
+                href="#sec-encodeuri-uri"
+                id="_ref_125"
+                ><a href="#sec-encodeuri-uri">19.2.6.4</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-encodeuricomponent-uricomponent"
+                id="_ref_1478"
+                ><a href="#sec-encodeuricomponent-uricomponent"
+                  >%encodeURIComponent%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>encodeURIComponent</code>
+            </td>
+            <td>
+              The <code>encodeURIComponent</code> function (<emu-xref
+                href="#sec-encodeuricomponent-uricomponent"
+                id="_ref_126"
+                ><a href="#sec-encodeuricomponent-uricomponent"
+                  >19.2.6.5</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-error-constructor" id="_ref_1479"
+                ><a href="#sec-error-constructor">%Error%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Error</code>
+            </td>
+            <td>
+              The Error
+              <emu-xref href="#constructor" id="_ref_1480"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-error-constructor" id="_ref_127"
+                ><a href="#sec-error-constructor">20.5.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-eval-x" id="_ref_1481"
+                ><a href="#sec-eval-x">%eval%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>eval</code>
+            </td>
+            <td>
+              The <code>eval</code> function (<emu-xref
+                href="#sec-eval-x"
+                id="_ref_128"
+                ><a href="#sec-eval-x">19.2.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-native-error-types-used-in-this-standard-evalerror"
+                id="_ref_1482"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-evalerror"
+                  >%EvalError%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>EvalError</code>
+            </td>
+            <td>
+              The EvalError
+              <emu-xref href="#constructor" id="_ref_1483"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref
+                href="#sec-native-error-types-used-in-this-standard-evalerror"
+                id="_ref_129"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-evalerror"
+                  >20.5.5.1</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-finalization-registry-constructor"
+                id="_ref_1484"
+                ><a href="#sec-finalization-registry-constructor"
+                  >%FinalizationRegistry%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>FinalizationRegistry</code>
+            </td>
+            <td>
+              The
+              <emu-xref
+                href="#sec-finalization-registry-constructor"
+                id="_ref_1485"
+                ><a href="#sec-finalization-registry-constructor"
+                  >FinalizationRegistry</a
+                ></emu-xref
+              >
+              <emu-xref href="#constructor" id="_ref_1486"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref
+                href="#sec-finalization-registry-constructor"
+                id="_ref_130"
+                ><a href="#sec-finalization-registry-constructor"
+                  >26.2.1</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1487"
+                ><a href="#sec-typedarray-objects">%Float32Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Float32Array</code>
+            </td>
+            <td>
+              The Float32Array
+              <emu-xref href="#constructor" id="_ref_1488"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_131"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1489"
+                ><a href="#sec-typedarray-objects">%Float64Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Float64Array</code>
+            </td>
+            <td>
+              The Float64Array
+              <emu-xref href="#constructor" id="_ref_1490"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_132"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-%foriniteratorprototype%-object"
+                id="_ref_1491"
+                ><a href="#sec-%foriniteratorprototype%-object"
+                  >%ForInIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The prototype of For-In iterator objects (<emu-xref
+                href="#sec-for-in-iterator-objects"
+                id="_ref_133"
+                ><a href="#sec-for-in-iterator-objects">14.7.5.10</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-function-constructor" id="_ref_1492"
+                ><a href="#sec-function-constructor">%Function%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Function</code>
+            </td>
+            <td>
+              The Function
+              <emu-xref href="#constructor" id="_ref_1493"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-function-constructor" id="_ref_134"
+                ><a href="#sec-function-constructor">20.2.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-generatorfunction-constructor" id="_ref_1494"
+                ><a href="#sec-generatorfunction-constructor"
+                  >%GeneratorFunction%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The
+              <emu-xref href="#constructor" id="_ref_1495"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              of generator objects (<emu-xref
+                href="#sec-generatorfunction-constructor"
+                id="_ref_135"
+                ><a href="#sec-generatorfunction-constructor"
+                  >27.3.1</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1496"
+                ><a href="#sec-typedarray-objects">%Int8Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Int8Array</code>
+            </td>
+            <td>
+              The Int8Array
+              <emu-xref href="#constructor" id="_ref_1497"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_136"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1498"
+                ><a href="#sec-typedarray-objects">%Int16Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Int16Array</code>
+            </td>
+            <td>
+              The Int16Array
+              <emu-xref href="#constructor" id="_ref_1499"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_137"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1500"
+                ><a href="#sec-typedarray-objects">%Int32Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Int32Array</code>
+            </td>
+            <td>
+              The Int32Array
+              <emu-xref href="#constructor" id="_ref_1501"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_138"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-isfinite-number" id="_ref_1502"
+                ><a href="#sec-isfinite-number">%isFinite%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>isFinite</code>
+            </td>
+            <td>
+              The <code>isFinite</code> function (<emu-xref
+                href="#sec-isfinite-number"
+                id="_ref_139"
+                ><a href="#sec-isfinite-number">19.2.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-isnan-number" id="_ref_1503"
+                ><a href="#sec-isnan-number">%isNaN%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>isNaN</code>
+            </td>
+            <td>
+              The <code>isNaN</code> function (<emu-xref
+                href="#sec-isnan-number"
+                id="_ref_140"
+                ><a href="#sec-isnan-number">19.2.3</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-%iteratorprototype%-object" id="_ref_1504"
+                ><a href="#sec-%iteratorprototype%-object"
+                  >%IteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              An object that all standard built-in iterator objects indirectly
+              inherit from
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-json-object" id="_ref_1505"
+                ><a href="#sec-json-object">%JSON%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>JSON</code>
+            </td>
+            <td>
+              The <code>JSON</code> object (<emu-xref
+                href="#sec-json-object"
+                id="_ref_141"
+                ><a href="#sec-json-object">25.5</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-map-constructor" id="_ref_1506"
+                ><a href="#sec-map-constructor">%Map%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Map</code>
+            </td>
+            <td>
+              The Map
+              <emu-xref href="#constructor" id="_ref_1507"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-map-constructor" id="_ref_142"
+                ><a href="#sec-map-constructor">24.1.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-%mapiteratorprototype%-object" id="_ref_1508"
+                ><a href="#sec-%mapiteratorprototype%-object"
+                  >%MapIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The prototype of Map iterator objects (<emu-xref
+                href="#sec-map-iterator-objects"
+                id="_ref_143"
+                ><a href="#sec-map-iterator-objects">24.1.5</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-math-object" id="_ref_1509"
+                ><a href="#sec-math-object">%Math%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Math</code>
+            </td>
+            <td>
+              The <code>Math</code> object (<emu-xref
+                href="#sec-math-object"
+                id="_ref_144"
+                ><a href="#sec-math-object">21.3</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-number-constructor" id="_ref_1510"
+                ><a href="#sec-number-constructor">%Number%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Number</code>
+            </td>
+            <td>
+              The Number
+              <emu-xref href="#constructor" id="_ref_1511"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-number-constructor" id="_ref_145"
+                ><a href="#sec-number-constructor">21.1.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-object-constructor" id="_ref_1512"
+                ><a href="#sec-object-constructor">%Object%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Object</code>
+            </td>
+            <td>
+              The Object
+              <emu-xref href="#constructor" id="_ref_1513"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-object-constructor" id="_ref_146"
+                ><a href="#sec-object-constructor">20.1.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-parsefloat-string" id="_ref_1514"
+                ><a href="#sec-parsefloat-string">%parseFloat%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>parseFloat</code>
+            </td>
+            <td>
+              The <code>parseFloat</code> function (<emu-xref
+                href="#sec-parsefloat-string"
+                id="_ref_147"
+                ><a href="#sec-parsefloat-string">19.2.4</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-parseint-string-radix" id="_ref_1515"
+                ><a href="#sec-parseint-string-radix">%parseInt%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>parseInt</code>
+            </td>
+            <td>
+              The <code>parseInt</code> function (<emu-xref
+                href="#sec-parseint-string-radix"
+                id="_ref_148"
+                ><a href="#sec-parseint-string-radix">19.2.5</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-promise-constructor" id="_ref_1516"
+                ><a href="#sec-promise-constructor">%Promise%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Promise</code>
+            </td>
+            <td>
+              The Promise
+              <emu-xref href="#constructor" id="_ref_1517"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-promise-constructor" id="_ref_149"
+                ><a href="#sec-promise-constructor">27.2.3</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-proxy-constructor" id="_ref_1518"
+                ><a href="#sec-proxy-constructor">%Proxy%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Proxy</code>
+            </td>
+            <td>
+              The Proxy
+              <emu-xref href="#constructor" id="_ref_1519"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-proxy-constructor" id="_ref_150"
+                ><a href="#sec-proxy-constructor">28.2.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-native-error-types-used-in-this-standard-rangeerror"
+                id="_ref_1520"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-rangeerror"
+                  >%RangeError%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>RangeError</code>
+            </td>
+            <td>
+              The RangeError
+              <emu-xref href="#constructor" id="_ref_1521"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref
+                href="#sec-native-error-types-used-in-this-standard-rangeerror"
+                id="_ref_151"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-rangeerror"
+                  >20.5.5.2</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-native-error-types-used-in-this-standard-referenceerror"
+                id="_ref_1522"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-referenceerror"
+                  >%ReferenceError%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>ReferenceError</code>
+            </td>
+            <td>
+              The ReferenceError
+              <emu-xref href="#constructor" id="_ref_1523"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref
+                href="#sec-native-error-types-used-in-this-standard-referenceerror"
+                id="_ref_152"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-referenceerror"
+                  >20.5.5.3</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-reflect-object" id="_ref_1524"
+                ><a href="#sec-reflect-object">%Reflect%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Reflect</code>
+            </td>
+            <td>
+              The <code>Reflect</code> object (<emu-xref
+                href="#sec-reflect-object"
+                id="_ref_153"
+                ><a href="#sec-reflect-object">28.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-regexp-constructor" id="_ref_1525"
+                ><a href="#sec-regexp-constructor">%RegExp%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>RegExp</code>
+            </td>
+            <td>
+              The RegExp
+              <emu-xref href="#constructor" id="_ref_1526"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-regexp-constructor" id="_ref_154"
+                ><a href="#sec-regexp-constructor">22.2.3</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-%regexpstringiteratorprototype%-object"
+                id="_ref_1527"
+                ><a href="#sec-%regexpstringiteratorprototype%-object"
+                  >%RegExpStringIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The prototype of RegExp String Iterator objects (<emu-xref
+                href="#sec-regexp-string-iterator-objects"
+                id="_ref_155"
+                ><a href="#sec-regexp-string-iterator-objects"
+                  >22.2.7</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-set-constructor" id="_ref_1528"
+                ><a href="#sec-set-constructor">%Set%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Set</code>
+            </td>
+            <td>
+              The Set
+              <emu-xref href="#constructor" id="_ref_1529"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-set-constructor" id="_ref_156"
+                ><a href="#sec-set-constructor">24.2.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-%setiteratorprototype%-object" id="_ref_1530"
+                ><a href="#sec-%setiteratorprototype%-object"
+                  >%SetIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The prototype of Set iterator objects (<emu-xref
+                href="#sec-set-iterator-objects"
+                id="_ref_157"
+                ><a href="#sec-set-iterator-objects">24.2.5</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-sharedarraybuffer-constructor" id="_ref_1531"
+                ><a href="#sec-sharedarraybuffer-constructor"
+                  >%SharedArrayBuffer%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>SharedArrayBuffer</code>
+            </td>
+            <td>
+              The SharedArrayBuffer
+              <emu-xref href="#constructor" id="_ref_1532"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-sharedarraybuffer-constructor" id="_ref_158"
+                ><a href="#sec-sharedarraybuffer-constructor"
+                  >25.2.2</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-string-constructor" id="_ref_1533"
+                ><a href="#sec-string-constructor">%String%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>String</code>
+            </td>
+            <td>
+              The String
+              <emu-xref href="#constructor" id="_ref_1534"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-string-constructor" id="_ref_159"
+                ><a href="#sec-string-constructor">22.1.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-%stringiteratorprototype%-object"
+                id="_ref_1535"
+                ><a href="#sec-%stringiteratorprototype%-object"
+                  >%StringIteratorPrototype%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The prototype of String iterator objects (<emu-xref
+                href="#sec-string-iterator-objects"
+                id="_ref_160"
+                ><a href="#sec-string-iterator-objects">22.1.5</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-symbol-constructor" id="_ref_1536"
+                ><a href="#sec-symbol-constructor">%Symbol%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Symbol</code>
+            </td>
+            <td>
+              The Symbol
+              <emu-xref href="#constructor" id="_ref_1537"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-symbol-constructor" id="_ref_161"
+                ><a href="#sec-symbol-constructor">20.4.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-native-error-types-used-in-this-standard-syntaxerror"
+                id="_ref_1538"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-syntaxerror"
+                  >%SyntaxError%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>SyntaxError</code>
+            </td>
+            <td>
+              The SyntaxError
+              <emu-xref href="#constructor" id="_ref_1539"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref
+                href="#sec-native-error-types-used-in-this-standard-syntaxerror"
+                id="_ref_162"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-syntaxerror"
+                  >20.5.5.4</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-%throwtypeerror%" id="_ref_1540"
+                ><a href="#sec-%throwtypeerror%">%ThrowTypeError%</a></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              A
+              <emu-xref href="#function-object" id="_ref_1541"
+                ><a href="#function-object">function object</a></emu-xref
+              >
+              that unconditionally throws a new instance of
+              <emu-xref
+                href="#sec-native-error-types-used-in-this-standard-typeerror"
+                id="_ref_1542"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-typeerror"
+                  >%TypeError%</a
+                ></emu-xref
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-%typedarray%-intrinsic-object" id="_ref_1543"
+                ><a href="#sec-%typedarray%-intrinsic-object"
+                  >%TypedArray%</a
+                ></emu-xref
+              >
+            </td>
+            <td></td>
+            <td>
+              The super class of all typed Array constructors (<emu-xref
+                href="#sec-%typedarray%-intrinsic-object"
+                id="_ref_163"
+                ><a href="#sec-%typedarray%-intrinsic-object"
+                  >23.2.1</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-native-error-types-used-in-this-standard-typeerror"
+                id="_ref_1544"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-typeerror"
+                  >%TypeError%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>TypeError</code>
+            </td>
+            <td>
+              The TypeError
+              <emu-xref href="#constructor" id="_ref_1545"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref
+                href="#sec-native-error-types-used-in-this-standard-typeerror"
+                id="_ref_164"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-typeerror"
+                  >20.5.5.5</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1546"
+                ><a href="#sec-typedarray-objects">%Uint8Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Uint8Array</code>
+            </td>
+            <td>
+              The Uint8Array
+              <emu-xref href="#constructor" id="_ref_1547"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_165"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1548"
+                ><a href="#sec-typedarray-objects"
+                  >%Uint8ClampedArray%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>Uint8ClampedArray</code>
+            </td>
+            <td>
+              The Uint8ClampedArray
+              <emu-xref href="#constructor" id="_ref_1549"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_166"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1550"
+                ><a href="#sec-typedarray-objects">%Uint16Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Uint16Array</code>
+            </td>
+            <td>
+              The Uint16Array
+              <emu-xref href="#constructor" id="_ref_1551"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_167"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-typedarray-objects" id="_ref_1552"
+                ><a href="#sec-typedarray-objects">%Uint32Array%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>Uint32Array</code>
+            </td>
+            <td>
+              The Uint32Array
+              <emu-xref href="#constructor" id="_ref_1553"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-typedarray-objects" id="_ref_168"
+                ><a href="#sec-typedarray-objects">23.2</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref
+                href="#sec-native-error-types-used-in-this-standard-urierror"
+                id="_ref_1554"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-urierror"
+                  >%URIError%</a
+                ></emu-xref
+              >
+            </td>
+            <td>
+              <code>URIError</code>
+            </td>
+            <td>
+              The URIError
+              <emu-xref href="#constructor" id="_ref_1555"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref
+                href="#sec-native-error-types-used-in-this-standard-urierror"
+                id="_ref_169"
+                ><a
+                  href="#sec-native-error-types-used-in-this-standard-urierror"
+                  >20.5.5.6</a
+                ></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-weakmap-constructor" id="_ref_1556"
+                ><a href="#sec-weakmap-constructor">%WeakMap%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>WeakMap</code>
+            </td>
+            <td>
+              The WeakMap
+              <emu-xref href="#constructor" id="_ref_1557"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-weakmap-constructor" id="_ref_170"
+                ><a href="#sec-weakmap-constructor">24.3.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              %<emu-xref href="#sec-weak-ref-constructor" id="_ref_1558"
+                ><a href="#sec-weak-ref-constructor">WeakRef</a></emu-xref
+              >%
+            </td>
+            <td>
+              <code>WeakRef</code>
+            </td>
+            <td>
+              The
+              <emu-xref href="#sec-weak-ref-constructor" id="_ref_1559"
+                ><a href="#sec-weak-ref-constructor">WeakRef</a></emu-xref
+              >
+              <emu-xref href="#constructor" id="_ref_1560"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-weak-ref-constructor" id="_ref_171"
+                ><a href="#sec-weak-ref-constructor">26.1.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <emu-xref href="#sec-weakset-constructor" id="_ref_1561"
+                ><a href="#sec-weakset-constructor">%WeakSet%</a></emu-xref
+              >
+            </td>
+            <td>
+              <code>WeakSet</code>
+            </td>
+            <td>
+              The WeakSet
+              <emu-xref href="#constructor" id="_ref_1562"
+                ><a href="#constructor">constructor</a></emu-xref
+              >
+              (<emu-xref href="#sec-weakset-constructor" id="_ref_172"
+                ><a href="#sec-weakset-constructor">24.4.1</a></emu-xref
+              >)
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </figure></emu-table
+  >
+  <emu-note
+    ><span class="note">Note</span>
+    <div class="note-contents">
+      <p>
+        Additional entries in
+        <emu-xref
+          href="#table-additional-well-known-intrinsic-objects"
+          id="_ref_173"
+          ><a href="#table-additional-well-known-intrinsic-objects"
+            >Table 82</a
+          ></emu-xref
+        >.
+      </p>
+    </div></emu-note
+  >
+</emu-clause>
