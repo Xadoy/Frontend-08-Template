@@ -446,9 +446,10 @@
       // deprecated escape and unescape are omitted.
 
       const dataIntrinsics = rawDataIntrinsics.map((intrinsic) => ({
-        id: !!intrinsic["Global Name"]
-          ? `${intrinsic["Intrinsic Name"]} Global Name: ${intrinsic["Global Name"]}`
-          : intrinsic["Intrinsic Name"],
+        id: intrinsic["Intrinsic Name"].slice(1, -1),
+        intrinsicName: intrinsic["Intrinsic Name"],
+        langAssociation: intrinsic["ECMAScript Language Association"],
+        globalName: intrinsic["Global Name"],
       }));
 
       const dataGlobalObj = rawDataGlobalObj.map((globalObj) => ({
@@ -459,6 +460,8 @@
         id: "Realm",
         children: rawDataRealm.map((realmObjs) => ({
           id: realmObjs["Field Name"],
+          value: realmObjs["Value"],
+          meaning: realmObjs["Meaning"],
           children:
             realmObjs["Field Name"] === "[[Intrinsics]]"
               ? dataIntrinsics
@@ -467,120 +470,47 @@
               : undefined,
         })),
       };
-      // const data = {
-      //   id: "Modeling Methods",
-      //   children: [
-      //     {
-      //       id: "Classification",
-      //       children: [
-      //         {
-      //           id: "Logistic regression",
-      //         },
-      //         {
-      //           id: "Linear discriminant analysis",
-      //         },
-      //         {
-      //           id: "Rules",
-      //         },
-      //         {
-      //           id: "Decision trees",
-      //         },
-      //         {
-      //           id: "Naive Bayes",
-      //         },
-      //         {
-      //           id: "K nearest neighbor",
-      //         },
-      //         {
-      //           id: "Probabilistic neural network",
-      //         },
-      //         {
-      //           id: "Support vector machine",
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       id: "Consensus",
-      //       children: [
-      //         {
-      //           id: "Models diversity",
-      //           children: [
-      //             {
-      //               id: "Different initializations",
-      //             },
-      //             {
-      //               id: "Different parameter choices",
-      //             },
-      //             {
-      //               id: "Different architectures",
-      //             },
-      //             {
-      //               id: "Different modeling methods",
-      //             },
-      //             {
-      //               id: "Different training sets",
-      //             },
-      //             {
-      //               id: "Different feature sets",
-      //             },
-      //           ],
-      //         },
-      //         {
-      //           id: "Methods",
-      //           children: [
-      //             {
-      //               id: "Classifier selection",
-      //             },
-      //             {
-      //               id: "Classifier fusion",
-      //             },
-      //           ],
-      //         },
-      //         {
-      //           id: "Common",
-      //           children: [
-      //             {
-      //               id: "Bagging",
-      //             },
-      //             {
-      //               id: "Boosting",
-      //             },
-      //             {
-      //               id: "AdaBoost",
-      //             },
-      //           ],
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       id: "Regression",
-      //       children: [
-      //         {
-      //           id: "Multiple linear regression",
-      //         },
-      //         {
-      //           id: "Partial least squares",
-      //         },
-      //         {
-      //           id: "Multi-layer feedforward neural network",
-      //         },
-      //         {
-      //           id: "General regression neural network",
-      //         },
-      //         {
-      //           id: "Support vector regression",
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // };
       const container = document.getElementById("container");
       const width = container.scrollWidth || 1000;
       const height = container.scrollHeight || 500;
+
+      const tooltip = new G6.Tooltip({
+        offsetX: 10,
+        offsetY: 20,
+        getContent(e) {
+          const outDiv = document.createElement("div");
+          outDiv.style.width = "280px";
+          outDiv.innerHTML = !!e.item.getModel().intrinsicName
+            ? `
+      <h4>${e.item.getModel().id}</h4>
+      <ul>
+        <li>Intrinsic Name: ${e.item.getModel().intrinsicName}</li>
+        <li>Intrinsic Name: ${e.item.getModel().globalName || "N/A"}</li>
+        <li>ECMAScript Language Association: ${
+          e.item.getModel().langAssociation
+        }</li>
+      </ul>`
+            : !!e.item.getModel().meaning
+            ? `
+      <h4>${e.item.getModel().id}</h4>
+      <ul>
+        <li>Value: ${e.item.getModel().value}</li>
+        <li>Meaning: ${e.item.getModel().meaning}</li>
+      </ul>`
+            : e.item.getModel().id === "Realm"
+            ? `
+      <h4>Realm: Before it is evaluated, all ECMAScript code must be associated with a realm. Conceptually, a realm consists of a set of intrinsic objects, an ECMAScript global environment, all of the ECMAScript code that is loaded within the scope of that global environment, and other associated state and resources.</h4>`
+            : `<h4>${e.item.getModel().id}</h4>`;
+          return outDiv;
+        },
+        itemTypes: ["node"],
+      });
+
       const graph = new G6.TreeGraph({
         container: "container",
         width,
         height,
+        plugins: [tooltip],
         modes: {
           default: [
             {
