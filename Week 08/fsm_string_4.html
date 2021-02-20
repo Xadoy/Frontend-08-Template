@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g6/4.1.7/dist/g6.min.js"></script>
+    <title>fsm string</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      #container {
+        flex: 1 0 0;
+        width: 100%;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="container"></div>
+    </div>
+    <script>
+      const inputStr = "ababababx";
+
+      const matchStr = "abababx";
+
+      function foundState() {
+        return foundState; // end state
+      }
+
+      function foundBState_2(input) {
+        if (input === "x") return foundState;
+        return foundBState_1(input);
+      }
+
+      function foundAState_2(input) {
+        if (input === "b") return foundBState_2;
+        return initState(input);
+      }
+
+      function foundBState_1(input) {
+        if (input === "a") return foundAState_2;
+        return foundBState(input);
+      }
+
+      function foundAState_1(input) {
+        if (input === "b") return foundBState_1;
+        return initState(input);
+      }
+
+      function foundBState(input) {
+        if (input === "a") return foundAState_1;
+        return initState(input);
+      }
+
+      function foundAState(input) {
+        if (input === "b") return foundBState;
+        return initState(input);
+      }
+
+      function initState(input) {
+        if (input === "a") return foundAState;
+        return initState;
+      }
+
+      let state = initState;
+
+      let index = 0;
+      while (index < inputStr.length && state !== foundState) {
+        const input = inputStr[index++];
+        state = state(input);
+      }
+      console.log(
+        state === foundState
+          ? `found char '${matchStr}' at index ${index - matchStr.length}`
+          : `cannot find '${matchStr}' in ${inputStr}`
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <script src="https://gw.alipayobjects.com/os/lib/antv/g6/4.1.7/dist/g6.min.js"></script>
+    <title>fsm string</title>
+    <style type="text/css">
+      html,
+      body,
+      #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+      }
+      #root {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      #container {
+        flex: 1 0 0;
+        width: 100%;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="container"></div>
+    </div>
+    <script>
+      function match(inputStr, matchStr) {
+        function foundState() {
+          return foundState; // end state
+        }
+        const len = matchStr.length;
+        let table = new Array(len).fill(0);
+        {
+          let i = 1,
+            j = 0;
+
+          while (i < len) {
+            if (matchStr[i] === matchStr[j]) {
+              ++j, ++i;
+              table[i] = j;
+            } else {
+              if (j > 0) j = table[j];
+              else {
+                ++i;
+              }
+            }
+          }
+        }
+
+        let states = new Array(len).fill(null);
+
+        states[len - 1] = (input) => {
+          if (input === matchStr[len - 1]) return foundState;
+          return states[table[len - 1]](input);
+        };
+
+        for (let i = 1; i < len - 1; i++) {
+          states[i] = (input) => {
+            if (input === matchStr[i]) return states[i + 1];
+            return states[table[i]](input);
+          };
+        }
+
+        states[0] = (input) => {
+          if (input === matchStr[0]) return states[1];
+          return states[table[0]];
+        };
+
+        let state = states[0];
+
+        let index = 0;
+        while (index < inputStr.length && state !== foundState) {
+          const input = inputStr[index++];
+          state = state(input);
+        }
+        console.log(
+          state === foundState
+            ? `found char '${matchStr}' at index ${index - matchStr.length}`
+            : `cannot find '${matchStr}' in ${inputStr}`
+        );
+      }
+      match("ababababx", "abababx");
+      match("Hello", "ll");
+      match("abcdabcdabcex", "abcdabce");
+      match("aabaabaaac", "aabaaac");
+      match("abc", "abc");
+      match("abxc", "abc"); // false
+    </script>
+  </body>
+</html>
