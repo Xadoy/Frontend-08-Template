@@ -1,10 +1,156 @@
+const { match } = require("assert");
+const css = require("css");
+
 const EOF = Symbol("EOF");
 
 let currentToken = null;
 let currentAttribute = null;
-function emit(token) {
-  token.type !== "text" && console.log(token);
+let currentTextNode = null;
+
+let stack = [{ type: "document", children: [] }];
+
+let rules = [];
+function addCSSRules(text) {
+  const ast = css.parse(text);
+  rules.push(...ast.stylesheet.rules);
 }
+
+function matchSelector(element, selector) {
+  if (!selector || !element.attributes) return false;
+
+  if (selector.charAt(0) === "#") {
+    const elementId = element.attributes.find((attr) => attr.name === "id")
+      ?.value;
+    if (elementId === selector.replace("#", "")) {
+      return true;
+    }
+  } else if (selector.charAt(0) === ".") {
+    const elementClass = element.attributes.find(
+      (attr) => attr.name === "class"
+    )?.value;
+    if (elementClass === selector.replace(".", "")) {
+      return true;
+    }
+  } else if (element.tagName === selector) {
+    return true;
+  }
+  return false;
+}
+
+function specificity(selector) {
+  const p = [0, 0, 0, 0];
+  const selectorParts = selector.split(" ");
+  for (const part of selectorParts) {
+    if (part.charAt(0) === "#") p[1] += 1;
+    else if (part.charAt(0) === ".") p[2] += 1;
+    else p[3] += 1;
+  }
+  return p;
+}
+
+function compareSpecificity(sp1, sp2) {
+  if (sp1[0] - sp2[0]) return sp1[0] - sp2[0];
+  if (sp1[1] - sp2[1]) return sp1[1] - sp2[1];
+  if (sp1[2] - sp2[2]) return sp1[2] - sp2[2];
+
+  return sp1[3] - sp2[3];
+}
+
+function computeCSS(element) {
+  const elements = stack.slice().reverse();
+
+  if (!element.computedStyle) element.computedStyle = {};
+
+  for (const rule of rules) {
+    const selectorParts = rule.selectors[0].split(" ").reverse();
+
+    if (!matchSelector(element, selectorParts[0])) continue;
+
+    let selectorIndex = 1;
+    for (let i = 0; i < elements.length; i++) {
+      if (matchSelector(elements[i], selectorParts[selectorIndex])) {
+        selectorIndex++;
+      }
+    }
+    if (selectorIndex >= selectorParts.length) {
+      // matched
+      const currentSpecificity = specificity(rule.selectors[0]);
+      const computedStyle = element.computedStyle;
+      for (const declaration of rule.declarations) {
+        const { property, value } = declaration;
+        if (!computedStyle[property]) {
+          computedStyle[property] = {};
+        }
+
+        if (!computedStyle[property].specificity) {
+          computedStyle[property].value = value;
+          computedStyle[property].specificity = currentSpecificity;
+        } else if (
+          compareSpecificity(
+            computedStyle[property].specificity,
+            currentSpecificity
+          ) < 0
+        ) {
+          computedStyle[property].value = value;
+          computedStyle[property].specificity = currentSpecificity;
+        }
+      }
+    }
+  }
+}
+
+function emit(token) {
+  let top = stack[stack.length - 1];
+
+  if (token.type === "startTag") {
+    let element = {
+      type: "element",
+      children: [],
+      attributes: [],
+    };
+
+    element.tagName = token.tagName;
+
+    for (const p in token) {
+      if (p !== "type" && p !== "tagName") {
+        element.attributes.push({
+          name: p,
+          value: token[p],
+        });
+      }
+    }
+
+    computeCSS(element);
+
+    top.children.push(element);
+    element.parent = top;
+
+    if (!token.isSelfClosing) stack.push(element);
+
+    currentTextNode = null;
+  } else if (token.type === "endTag") {
+    if (top.tagName !== token.tagName) {
+      throw new Error("Tag start end mismatch");
+    } else {
+      if (top.tagName === "style") {
+        addCSSRules(top.children[0].content);
+      }
+      stack.pop();
+    }
+
+    currentToken = null;
+  } else if (token.type === "text") {
+    if (currentTextNode === null) {
+      currentTextNode = {
+        type: "text",
+        content: "",
+      };
+      top.children.push(currentTextNode);
+    }
+    currentTextNode.content += token.content;
+  }
+}
+
 function data(c) {
   if (c === "<") {
     return tagOpen;
@@ -199,4 +345,18 @@ module.exports.parseHTML = function parseHTML(html) {
     state = state(c);
   }
   state = state(EOF);
+
+  // integration test: dom parsing and css computing with specificity
+  console.log(
+    stack[0].children[0].children[2].children[1].children[1].tagName === "img"
+  );
+  console.log(
+    stack[0].children[0].children[2].children[1].children[1].computedStyle.width
+      .value === "100px"
+  );
+  console.log(
+    stack[0].children[0].children[2].children[1].children[1].computedStyle[
+      "background-color"
+    ].value === "#ff5000"
+  );
 };
