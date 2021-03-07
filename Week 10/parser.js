@@ -1,4 +1,4 @@
-const { match } = require("assert");
+const layout = require("./layout");
 const css = require("css");
 
 const EOF = Symbol("EOF");
@@ -135,6 +135,7 @@ function emit(token) {
       if (top.tagName === "style") {
         addCSSRules(top.children[0].content);
       }
+      layout(top);
       stack.pop();
     }
 
@@ -359,4 +360,5 @@ module.exports.parseHTML = function parseHTML(html) {
       "background-color"
     ].value === "#ff5000"
   );
+  return stack[0];
 };
